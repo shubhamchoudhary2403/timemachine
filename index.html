@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- ✅ Fixed viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Time Machine</title>
   <style>
     html,
@@ -79,7 +79,6 @@
       margin-top: 24px;
       font-size: 16px;
       min-height: 40px;
-      transition: opacity .4s ease;
     }
 
     .final-para {
@@ -155,24 +154,21 @@
 
     function showMessageSequentially(value) {
       let i = 0;
-
+      messageArea.textContent = '';
       function next() {
         if (i < messages.length) {
-          messageArea.style.opacity = 0;
-          setTimeout(() => {
-            messageArea.textContent = messages[i].replace('coordinates', value);
-            messageArea.style.opacity = 1;
-            i++;
-            setTimeout(next, 1200);
-          }, 400);
+          messageArea.textContent = messages[i].replace('coordinates', value);
+          i++;
+          setTimeout(next, 1200);
         } else {
-          setTimeout(() => {
-            finalPara.style.opacity = 1;
-            // After 10 seconds show sorry texts
-            setTimeout(startFallingSorry, 10000);
-            // After 20 seconds show button
-            setTimeout(showLoveButton, 20000);
-          }, 1200);
+          // paragraph appears
+          finalPara.style.opacity = 1;
+
+          // after 10s sorry texts
+          setTimeout(startFallingSorry, 10000);
+
+          // after 20s show love button
+          setTimeout(showLoveButton, 20000);
         }
       }
       next();
@@ -192,8 +188,7 @@
         setTimeout(() => span.remove(), 7000);
       }
 
-      // ✅ Reduced rate for mobile smoothness
-      const sorryInterval = setInterval(createFallingText, 1000);
+      const sorryInterval = setInterval(createFallingText, 800);
       stage.dataset.sorryInterval = sorryInterval;
     }
 
@@ -215,15 +210,14 @@
       stage.appendChild(btn);
 
       btn.addEventListener('click', () => {
-        // Stop sorry texts
         clearInterval(stage.dataset.sorryInterval);
-        // Fade everything out
+
         document.querySelectorAll('.card, .final-para, .falling-text, button').forEach(el => {
           el.style.transition = 'opacity 1s ease';
           el.style.opacity = 0;
           setTimeout(() => el.remove(), 1500);
         });
-        // Start I Love You animation
+
         setTimeout(startFallingLove, 2000);
       });
     }
@@ -236,12 +230,12 @@
         span.style.left = Math.random() * 100 + 'vw';
         span.style.fontSize = 20 + Math.random() * 10 + 'px';
         span.style.animationDuration = 6 + Math.random() * 4 + 's';
-        span.style.textShadow = '0 0 8px pink, 0 0 15px red';
+        span.style.textShadow = '0 0 8px pink, 0 0 15px red, 0 0 25px hotpink';
         stage.appendChild(span);
         setTimeout(() => span.remove(), 10000);
       }
 
-      // ✅ Slower rate for smooth, romantic fall
+      // Slow romantic fall
       setInterval(createFallingLove, 1000);
     }
 
@@ -256,5 +250,4 @@
     });
   </script>
 </body>
-
 </html>
