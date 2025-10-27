@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- ✅ Fixed viewport -->
+  <title>Time Machine</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      overflow: hidden;
+    }
+
+    .stage {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(720px, 90%);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      text-align: center;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0 0 14px 0;
+      font-size: 20px;
+      letter-spacing: 0.6px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input[type=number] {
+      flex: 1;
+      max-width: 200px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      text-align: center;
+    }
+
+    input[type=number]::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    button {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: #041;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .info {
+      margin-top: 24px;
+      font-size: 16px;
+      min-height: 40px;
+      transition: opacity .4s ease;
+    }
+
+    .final-para {
+      position: absolute;
+      top: 10%;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      z-index: 2;
+    }
+
+    .falling-text {
+      position: absolute;
+      font-size: 22px;
+      animation: fall 5s linear infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage">
+    <div class="final-para" id="finalPara">
+      <h3>Pr ek chiz h jo kabhi khatam nhi hogi wo h aapke liye mera pyaar 😚💗<br>
+        I really want to say I’m sorry for the way it came out , I didn’t mean to sound harsh or make you feel bad ,
+        You looked amazing — you always do — and I’ve never had an issue with how you express yourself. I just got a
+        little protective, especially now that more people follow you Please don’t stay upset, my sunshine ☀ I just
+        want us to be good again… you’re my peace, my favourite person and I can’t stand it when your smile fades 😭😭💞
+      </h3>
+    </div>
+
+    <div class="card">
+      <h1>Time Machine ❤️</h1>
+      <div class="controls">
+        <input id="timeInput" type="number" placeholder="time machine" />
+        <button id="startBtn">Travel</button>
+      </div>
+      <div class="info" id="messageArea"></div>
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const input = document.getElementById('timeInput');
+    const messageArea = document.getElementById('messageArea');
+    const finalPara = document.getElementById('finalPara');
+    const stage = document.querySelector('.stage');
+
+    const messages = [
+      'Building warmhole...',
+      'Calling aliens...',
+      'Missed call received from Narendra Modi...',
+      'Checking aliens mood...',
+      'Taking permission from your parents...',
+      '',
+      '26 M TO DUNIYA KHATAM H 💀'
+    ];
+
+    function showMessageSequentially(value) {
+      let i = 0;
+
+      function next() {
+        if (i < messages.length) {
+          messageArea.style.opacity = 0;
+          setTimeout(() => {
+            messageArea.textContent = messages[i].replace('coordinates', value);
+            messageArea.style.opacity = 1;
+            i++;
+            setTimeout(next, 1200);
+          }, 400);
+        } else {
+          setTimeout(() => {
+            finalPara.style.opacity = 1;
+            // After 10 seconds show sorry texts
+            setTimeout(startFallingSorry, 10000);
+            // After 20 seconds show button
+            setTimeout(showLoveButton, 20000);
+          }, 1200);
+        }
+      }
+      next();
+    }
+
+    function startFallingSorry() {
+      const texts = ['😢', '😭', 'I am sorry baccha', 'sorry', '💔', '🥺', '😭'];
+
+      function createFallingText() {
+        const span = document.createElement('span');
+        span.className = 'falling-text';
+        span.textContent = texts[Math.floor(Math.random() * texts.length)];
+        span.style.left = Math.random() * 100 + 'vw';
+        span.style.animationDuration = 4 + Math.random() * 3 + 's';
+        span.style.fontSize = 18 + Math.random() * 14 + 'px';
+        stage.appendChild(span);
+        setTimeout(() => span.remove(), 7000);
+      }
+
+      // ✅ Reduced rate for mobile smoothness
+      const sorryInterval = setInterval(createFallingText, 1000);
+      stage.dataset.sorryInterval = sorryInterval;
+    }
+
+    function showLoveButton() {
+      const btn = document.createElement('button');
+      btn.textContent = "Click Me 💞";
+      btn.style.position = 'absolute';
+      btn.style.bottom = '50px';
+      btn.style.left = '50%';
+      btn.style.transform = 'translateX(-50%)';
+      btn.style.padding = '14px 24px';
+      btn.style.fontSize = '18px';
+      btn.style.borderRadius = '12px';
+      btn.style.background = 'linear-gradient(90deg, #ff6ec4, #7873f5)';
+      btn.style.color = '#fff';
+      btn.style.border = 'none';
+      btn.style.cursor = 'pointer';
+      btn.style.zIndex = '10';
+      stage.appendChild(btn);
+
+      btn.addEventListener('click', () => {
+        // Stop sorry texts
+        clearInterval(stage.dataset.sorryInterval);
+        // Fade everything out
+        document.querySelectorAll('.card, .final-para, .falling-text, button').forEach(el => {
+          el.style.transition = 'opacity 1s ease';
+          el.style.opacity = 0;
+          setTimeout(() => el.remove(), 1500);
+        });
+        // Start I Love You animation
+        setTimeout(startFallingLove, 2000);
+      });
+    }
+
+    function startFallingLove() {
+      function createFallingLove() {
+        const span = document.createElement('span');
+        span.className = 'falling-text';
+        span.textContent = 'I Love You ❤️';
+        span.style.left = Math.random() * 100 + 'vw';
+        span.style.fontSize = 20 + Math.random() * 10 + 'px';
+        span.style.animationDuration = 6 + Math.random() * 4 + 's';
+        span.style.textShadow = '0 0 8px pink, 0 0 15px red';
+        stage.appendChild(span);
+        setTimeout(() => span.remove(), 10000);
+      }
+
+      // ✅ Slower rate for smooth, romantic fall
+      setInterval(createFallingLove, 1000);
+    }
+
+    startBtn.addEventListener('click', () => {
+      const value = input.value || 'time';
+      finalPara.style.opacity = 0;
+      showMessageSequentially(value);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startBtn.click();
+    });
+  </script>
+</body>
+
+</html>
